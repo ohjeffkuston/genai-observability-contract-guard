@@ -1,0 +1,1 @@
+{"required_evaluations":["quality","safety","groundedness"],"maximum_retention_days":30,"content_capture_default":false,"required_slos":["availability","p95_latency_ms","quality_score"]}

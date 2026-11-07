@@ -1,0 +1,27 @@
+service: customer-support-agent
+telemetry:
+  attributes:
+    - gen_ai.operation.name
+    - gen_ai.provider.name
+    - gen_ai.request.model
+    - gen_ai.response.model
+    - gen_ai.prompt.name
+    - service.name
+    - deployment.environment.name
+  metrics: [request.duration, time_to_first_token, input_tokens, output_tokens, error_rate]
+  sample_rate: 0.25
+evaluation:
+  signals:
+    - {name: quality, trace_link: true, model_version: true, prompt_version: true}
+    - {name: safety, trace_link: true, model_version: true, prompt_version: true}
+    - {name: groundedness, trace_link: true, model_version: true, prompt_version: true}
+  baseline: {dataset_version: support-eval-v7, model_version: model-2026-11-01}
+privacy:
+  capture_prompt_or_response_content: false
+  retention_days: 14
+  redaction: {enabled: true, classes: [email, phone, credential]}
+operations:
+  slo: {availability: 0.995, p95_latency_ms: 2500, quality_score: 0.85}
+  alert_owner: ai-platform-oncall
+  runbook_url: https://example.invalid/runbooks/genai-observability
+  rollback: {enabled: true, trigger: quality-burn-rate}
